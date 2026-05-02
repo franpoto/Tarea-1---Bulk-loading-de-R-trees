@@ -1,12 +1,7 @@
-//
-// Created by fabia on 1/5/2026.
-//
+#ifndef ESTRUCTURAS_H
+#define ESTRUCTURAS_H
 
 
-
-#include <stdio.h>
-
-int B=204;
 
 typedef struct {
     float xmin, xmax, ymin, ymax;
@@ -18,15 +13,12 @@ typedef struct {
 } hijo;
 
 typedef struct {
-    hijo * hijos;
+    hijo *hijos;
     int k;
     int pad[12];
-
 } Nodo;
 
-
-
-
+#endif
 
 
 
