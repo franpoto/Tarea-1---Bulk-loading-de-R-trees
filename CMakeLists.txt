@@ -7,4 +7,7 @@ add_executable(untitled2 main.c
         Estructuras.h
         inits.h
         nearestx.c
-        inits.c)
+        inits.c
+        nearestx.h
+        leerArchivos.h
+        leerArchivos.c)

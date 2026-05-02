@@ -19,6 +19,7 @@ extern int total_nodos;
 // funciones
 Nodo crearNodo();
 hijo crearPunto(float x, float y);
+void inicializarArbol();
 
 #endif
 

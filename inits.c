@@ -34,3 +34,5 @@ hijo crearPunto(float x, float y) {
 void inicializarArbol() {
     total_nodos = 1; // dejamos espacio para la raiz
 }
+
+

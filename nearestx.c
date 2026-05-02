@@ -70,7 +70,7 @@ int nearestX(hijo *entrada, int n) {
             nodos_creados++;
         }
 
-        //  si cabe en un nodo → raíz
+        //  si cabe en un nodo -> raíz
         if (nodos_creados <= B) {
 
             Nodo raiz;
