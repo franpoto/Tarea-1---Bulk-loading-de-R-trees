@@ -2,7 +2,7 @@
 #define ESTRUCTURAS_H
 
 
-
+#define B 204
 typedef struct {
     float xmin, xmax, ymin, ymax;
 } MBR;
@@ -13,8 +13,8 @@ typedef struct {
 } hijo;
 
 typedef struct {
-    hijo *hijos;
     int k;
+    hijo hijos[B];
     int pad[12];
 } Nodo;
 

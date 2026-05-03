@@ -4,8 +4,8 @@
 
 
 #include "inits.h"
+#include "Estructuras.h"
 
-int B = 204;
 Nodo arbol[MAX_NODOS];
 int total_nodos = 0;
 
@@ -13,7 +13,7 @@ Nodo crearNodo() {
     Nodo n;
 
     n.k = 0;
-    n.hijos = (hijo*) malloc(sizeof(hijo) * B);
+
 
     return n;
 }

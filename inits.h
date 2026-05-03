@@ -12,7 +12,7 @@
 
 #define MAX_NODOS 100000
 
-extern int B;
+
 extern Nodo arbol[MAX_NODOS];
 extern int total_nodos;
 
