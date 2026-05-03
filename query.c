@@ -3,20 +3,6 @@
 #include "query.h"
 #include "inits.h"
 
-#define B 204
-
-typedef struct{
-    MBR clave;
-    int valor;
-}HijoDisk;
-
-typedef struct {
-    int k;
-    HijoDisk hijos[B];
-    char pad[12];
-} NodoDisk;
-
-
 /**
  * Verifica si dos rectángulos se intersectan
  *
@@ -67,26 +53,33 @@ int interseccion(MBR a, MBR b){
  *        - Si es nodo interno → se llama recursivamente
  */
 
-void rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count) {
+int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count) {
 
-    NodoDisk nodo;
+    Nodo nodo;
+    int encontrados = 0;
 
-    // leer nodo desde archivo
-    fseek(f, nodeIndex * sizeof(NodoDisk), SEEK_SET);
-    fread(&nodo, sizeof(NodoDisk), 1, f);
+    // leer nodo desde disco
+    fseek(f, nodeIndex * sizeof(Nodo), SEEK_SET);
+    fread(&nodo, sizeof(Nodo), 1, f);
 
     (*io_count)++;
 
     for (int i = 0; i < nodo.k; i++) {
 
-        HijoDisk h = nodo.hijos[i];
+        hijo h = nodo.hijos[i];
 
-        if (!intersecccion(h.clave, query)) continue;
+        
+        if (!interseccion(h.clave, query)) continue;
 
+        
         if (h.valor == -1) {
-            printf("Punto: (%f, %f)\n",h.clave.xmin, h.clave.ymin);
-        } else {
-            rangeQuery(f, h.valor, query, io_count);
+            encontrados++;
+        }
+        
+        else {
+            encontrados += rangeQuery(f, h.valor, query, io_count);
         }
     }
+
+    return encontrados;
 }
