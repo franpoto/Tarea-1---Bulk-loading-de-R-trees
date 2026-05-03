@@ -7,6 +7,8 @@
 #include "leerArchivos.h"
 #include "inits.h"
 #include "nearestx.h"
+#include "buildSTR.h"
+
 
 
 int main(void) {
