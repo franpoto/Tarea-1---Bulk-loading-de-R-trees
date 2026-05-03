@@ -83,3 +83,21 @@ int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count) {
 
     return encontrados;
 }
+
+MBR generarQuery(float s) {
+    MBR q;
+
+    float x = (float)rand() / RAND_MAX;
+    float y = (float)rand() / RAND_MAX;
+
+    q.xmin = x;
+    q.ymin = y;
+    q.xmax = x + s;
+    q.ymax = y + s;
+
+    // evitar salir del rango [0,1]
+    if (q.xmax > 1.0) q.xmax = 1.0;
+    if (q.ymax > 1.0) q.ymax = 1.0;
+
+    return q;
+}

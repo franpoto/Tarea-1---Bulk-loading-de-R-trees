@@ -20,6 +20,7 @@ extern int total_nodos;
 Nodo crearNodo();
 hijo crearPunto(float x, float y);
 void inicializarArbol();
+void guardarArbol(const char* filename);
 
 #endif
 

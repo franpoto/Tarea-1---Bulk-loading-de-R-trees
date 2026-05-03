@@ -21,4 +21,7 @@ int interseccion(MBR a, MBR b);
  */
 int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count);
 
+
+MBR generarQuery(float s);
+
 #endif

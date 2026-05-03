@@ -7,10 +7,13 @@
 #include "leerArchivos.h"
 #include "inits.h"
 #include "nearestx.h"
+#include "query.h"
 
 
 int main(void) {
     printf("Hello, World!\n");
+    int num_queries = 10;
+    float tamaños[] = {0.01, 0.02, 0.05};
 
 
 
@@ -34,6 +37,42 @@ int main(void) {
         double tiempo = (double)(fin - inicio) / CLOCKS_PER_SEC;
 
         printf("Tiempo: %.4f segundos\n\n", tiempo);
+        // guardar en disco
+        guardarArbol("rtree.bin");
+
+        FILE *f = fopen("rtree.bin", "rb");
+
+        if (!f) {
+            printf("Error abriendo archivo\n");
+            return 1;
+        }
+
+        // probar queries
+        for (int t = 0; t < 3; t++) {
+
+            float s = tamaños[t];
+
+            int total_io = 0;
+            int total_puntos = 0;
+
+            for (int q = 0; q < num_queries; q++) {
+
+                MBR query = generarQuery(s);
+                int io = 0;
+
+                int encontrados = rangeQuery(f, 0, query, &io);
+
+                total_io += io;
+                total_puntos += encontrados;
+            }
+
+            printf("s=%.3f -> avg puntos=%.2f, avg IO=%.2f\n",
+                   s,
+                   (double)total_puntos / num_queries,
+                   (double)total_io / num_queries);
+        }
+
+        fclose(f);
 
         free(puntos);
     }
@@ -58,6 +97,41 @@ int main(void) {
         double tiempo = (double)(fin - inicio) / CLOCKS_PER_SEC;
 
         printf("Tiempo: %.4f segundos\n\n", tiempo);
+
+        guardarArbol("rtree.bin");
+
+        FILE *f = fopen("rtree.bin", "rb");
+
+        if (!f) {
+            printf("Error abriendo archivo\n");
+            return 1;
+        }
+
+        for (int t = 0; t < 3; t++) {
+
+            float s = tamaños[t];
+
+            int total_io = 0;
+            int total_puntos = 0;
+
+            for (int q = 0; q < num_queries; q++) {
+
+                MBR query = generarQuery(s);
+                int io = 0;
+
+                int encontrados = rangeQuery(f, 0, query, &io);
+
+                total_io += io;
+                total_puntos += encontrados;
+            }
+
+            printf("s=%.3f -> avg puntos=%.2f, avg IO=%.2f\n",
+                   s,
+                   (double)total_puntos / num_queries,
+                   (double)total_io / num_queries);
+        }
+
+        fclose(f);
 
         free(puntos);
     }

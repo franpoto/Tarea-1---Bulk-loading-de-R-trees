@@ -35,4 +35,20 @@ void inicializarArbol() {
     total_nodos = 1; // dejamos espacio para la raiz
 }
 
+void guardarArbol(const char* filename) {
+    FILE *f = fopen(filename, "wb");
+
+    if (!f) {
+        perror("Error abriendo archivo");
+        exit(1);
+    }
+
+    for (int i = 0; i < total_nodos; i++) {
+        fwrite(&arbol[i], sizeof(Nodo), 1, f);
+    }
+
+    fclose(f);
+}
+
+
 

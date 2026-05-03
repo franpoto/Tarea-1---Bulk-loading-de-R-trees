@@ -10,4 +10,6 @@ add_executable(untitled2 main.c
         inits.c
         nearestx.h
         leerArchivos.h
-        leerArchivos.c)
+        leerArchivos.c
+        query.c
+)
