@@ -58,7 +58,7 @@ int nearestX(hijo *entrada, int n) {
 
             Nodo nodo;
             nodo.k = 0;
-            nodo.hijos = (hijo*) malloc(sizeof(hijo) * B);
+
 
             int limite = (i + B < n) ? i + B : n;
 
@@ -70,12 +70,12 @@ int nearestX(hijo *entrada, int n) {
             nodos_creados++;
         }
 
-        //  si cabe en un nodo → raíz
+        //  si cabe en un nodo -> raíz
         if (nodos_creados <= B) {
 
             Nodo raiz;
             raiz.k = nodos_creados;
-            raiz.hijos = (hijo*) malloc(sizeof(hijo) * B);
+
 
             for (int i = 0; i < nodos_creados; i++) {
                 raiz.hijos[i].clave = calcularMBR(&arbol[inicio_nivel + i]);
