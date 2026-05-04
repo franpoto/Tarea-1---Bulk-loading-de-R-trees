@@ -90,14 +90,23 @@ MBR generarQuery(float s) {
     float x = (float)rand() / RAND_MAX;
     float y = (float)rand() / RAND_MAX;
 
+
+    if (x > 1.0 - s) x = 1.0 - s;
+    if (y > 1.0 - s) y = 1.0 - s;
+
     q.xmin = x;
     q.ymin = y;
     q.xmax = x + s;
     q.ymax = y + s;
 
-    // evitar salir del rango [0,1]
-    if (q.xmax > 1.0) q.xmax = 1.0;
-    if (q.ymax > 1.0) q.ymax = 1.0;
-
     return q;
+}
+
+double stddev(double arr[], int n, double mean) {
+    double sum = 0.0;
+    for (int i = 0; i < n; i++) {
+        double d = arr[i] - mean;
+        sum += d * d;
+    }
+    return sqrt(sum / n);
 }

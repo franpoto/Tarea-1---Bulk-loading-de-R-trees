@@ -10,13 +10,20 @@
 #include "query.h"
 #include "str.h"
 
+int num_queries = 100;
+float tamaños[] = {0.0025, 0.005, 0.01, 0.025, 0.05};
 
 int main(void) {
     printf("Hello, World!\n");
-    int num_queries = 10;
-    float tamaños[] = {0.01, 0.02, 0.05};
 
 
+    FILE *out = fopen("resultados.csv", "w");
+    if (!out) {
+        printf("Error creando resultados.csv\n");
+        return 1;
+    }
+
+    fprintf(out, "N,estructura,dataset,s,puntos,IO,std_puntos,tiempo\n");
 
     //EXPERIMENTACION NEAREST X CON DATOS RANDOM
     for (int exp = 15; exp <= 24; exp++) {
@@ -49,12 +56,13 @@ int main(void) {
         }
 
         // probar queries
-        for (int t = 0; t < 3; t++) {
+        for (int t = 0; t < 5; t++) {
 
             float s = tamaños[t];
 
-            int total_io = 0;
-            int total_puntos = 0;
+            double io_vals[100];
+            double pts_vals[100];
+
 
             for (int q = 0; q < num_queries; q++) {
 
@@ -63,14 +71,26 @@ int main(void) {
 
                 int encontrados = rangeQuery(f, 0, query, &io);
 
-                total_io += io;
-                total_puntos += encontrados;
+                io_vals[q] = io;
+                pts_vals[q] = encontrados;
             }
 
-            printf("s=%.3f -> avg puntos=%.2f, avg IO=%.2f\n",
-                   s,
-                   (double)total_puntos / num_queries,
-                   (double)total_io / num_queries);
+            double sum_io = 0, sum_pts = 0;
+
+            for (int i = 0; i < num_queries; i++) {
+                sum_io += io_vals[i];
+                sum_pts += pts_vals[i];
+            }
+
+            double avg_io = sum_io / num_queries;
+            double avg_pts = sum_pts / num_queries;
+            double sd_pts = stddev(pts_vals, num_queries, avg_pts);
+
+            printf("s=%.4f -> pts=%.2f (std=%.2f), IO=%.2f\n",
+                   s, avg_pts, sd_pts, avg_io);
+
+            fprintf(out, "%d,nearestX,random,%.4f,%.2f,%.2f,%.2f,%.6f\n",
+                    N, s, avg_pts, avg_io, sd_pts, tiempo);
         }
 
         fclose(f);
@@ -102,18 +122,14 @@ int main(void) {
         guardarArbol("rtree.bin");
 
         FILE *f = fopen("rtree.bin", "rb");
+        if (!f) return 1;
 
-        if (!f) {
-            printf("Error abriendo archivo\n");
-            return 1;
-        }
-
-        for (int t = 0; t < 3; t++) {
+        for (int t = 0; t < 5; t++) {
 
             float s = tamaños[t];
 
-            int total_io = 0;
-            int total_puntos = 0;
+            double io_vals[100];
+            double pts_vals[100];
 
             for (int q = 0; q < num_queries; q++) {
 
@@ -122,17 +138,30 @@ int main(void) {
 
                 int encontrados = rangeQuery(f, 0, query, &io);
 
-                total_io += io;
-                total_puntos += encontrados;
+                io_vals[q] = io;
+                pts_vals[q] = encontrados;
             }
 
-            printf("s=%.3f -> avg puntos=%.2f, avg IO=%.2f\n",
-                   s,
-                   (double)total_puntos / num_queries,
-                   (double)total_io / num_queries);
+            double sum_io = 0, sum_pts = 0;
+
+            for (int i = 0; i < num_queries; i++) {
+                sum_io += io_vals[i];
+                sum_pts += pts_vals[i];
+            }
+
+            double avg_io = sum_io / num_queries;
+            double avg_pts = sum_pts / num_queries;
+            double sd_pts = stddev(pts_vals, num_queries, avg_pts);
+
+            printf("s=%.4f -> pts=%.2f (std=%.2f), IO=%.2f\n",
+                   s, avg_pts, sd_pts, avg_io);
+
+            fprintf(out, "%d,nearestX,europa,%.4f,%.2f,%.2f,%.2f,%.6f\n",
+                    N, s, avg_pts, avg_io, sd_pts, tiempo);
         }
 
         fclose(f);
+
 
         free(puntos);
     }
@@ -161,18 +190,14 @@ int main(void) {
         guardarArbol("str.bin");
 
         FILE *f = fopen("str.bin", "rb");
-        if (!f) {
-            printf("Error abriendo STR\n");
-            return 1;
-        }
+        if (!f) return 1;
 
-        // 🔥 queries igual que nearestX
-        for (int t = 0; t < 3; t++) {
+        for (int t = 0; t < 5; t++) {
 
             float s = tamaños[t];
 
-            int total_io = 0;
-            int total_puntos = 0;
+            double io_vals[100];
+            double pts_vals[100];
 
             for (int q = 0; q < num_queries; q++) {
 
@@ -181,14 +206,26 @@ int main(void) {
 
                 int encontrados = rangeQuery(f, 0, query, &io);
 
-                total_io += io;
-                total_puntos += encontrados;
+                io_vals[q] = io;
+                pts_vals[q] = encontrados;
             }
 
-            printf("s=%.3f -> avg puntos=%.2f, avg IO=%.2f\n",
-                   s,
-                   (double)total_puntos / num_queries,
-                   (double)total_io / num_queries);
+            double sum_io = 0, sum_pts = 0;
+
+            for (int i = 0; i < num_queries; i++) {
+                sum_io += io_vals[i];
+                sum_pts += pts_vals[i];
+            }
+
+            double avg_io = sum_io / num_queries;
+            double avg_pts = sum_pts / num_queries;
+            double sd_pts = stddev(pts_vals, num_queries, avg_pts);
+
+            printf("s=%.4f -> pts=%.2f (std=%.2f), IO=%.2f\n",
+                   s, avg_pts, sd_pts, avg_io);
+
+            fprintf(out, "%d,STR,random,%.4f,%.2f,%.2f,%.2f,%.6f\n",
+                    N, s, avg_pts, avg_io, sd_pts, tiempo);
         }
 
         fclose(f);
@@ -220,18 +257,14 @@ int main(void) {
         guardarArbol("str.bin");
 
         FILE *f = fopen("str.bin", "rb");
-        if (!f) {
-            printf("Error abriendo STR\n");
-            return 1;
-        }
+        if (!f) return 1;
 
-
-        for (int t = 0; t < 3; t++) {
+        for (int t = 0; t < 5; t++) {
 
             float s = tamaños[t];
 
-            int total_io = 0;
-            int total_puntos = 0;
+            double io_vals[100];
+            double pts_vals[100];
 
             for (int q = 0; q < num_queries; q++) {
 
@@ -240,14 +273,26 @@ int main(void) {
 
                 int encontrados = rangeQuery(f, 0, query, &io);
 
-                total_io += io;
-                total_puntos += encontrados;
+                io_vals[q] = io;
+                pts_vals[q] = encontrados;
             }
 
-            printf("s=%.3f -> avg puntos=%.2f, avg IO=%.2f\n",
-                   s,
-                   (double)total_puntos / num_queries,
-                   (double)total_io / num_queries);
+            double sum_io = 0, sum_pts = 0;
+
+            for (int i = 0; i < num_queries; i++) {
+                sum_io += io_vals[i];
+                sum_pts += pts_vals[i];
+            }
+
+            double avg_io = sum_io / num_queries;
+            double avg_pts = sum_pts / num_queries;
+            double sd_pts = stddev(pts_vals, num_queries, avg_pts);
+
+            printf("s=%.4f -> pts=%.2f (std=%.2f), IO=%.2f\n",
+                   s, avg_pts, sd_pts, avg_io);
+
+            fprintf(out, "%d,STR,europa,%.4f,%.2f,%.2f,%.2f,%.6f\n",
+                    N, s, avg_pts, avg_io, sd_pts, tiempo);
         }
 
         fclose(f);

@@ -24,4 +24,6 @@ int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count);
 
 MBR generarQuery(float s);
 
+double stddev(double arr[], int n, double mean);
+
 #endif
