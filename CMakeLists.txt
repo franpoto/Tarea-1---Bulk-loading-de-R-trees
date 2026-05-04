@@ -12,4 +12,6 @@ add_executable(untitled2 main.c
         leerArchivos.h
         leerArchivos.c
         query.c
+        str.c
+        str.h
 )
