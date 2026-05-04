@@ -7,6 +7,7 @@
 #include "leerArchivos.h"
 #include "inits.h"
 #include "nearestx.h"
+#include "str.h"
 
 
 int main(void) {
@@ -19,7 +20,7 @@ int main(void) {
 
         int N = 1 << exp;
 
-        printf("Probando (random) N = %d\n", N);
+        printf("Probando nearx (random) N = %d\n", N);
 
         hijo *puntos = leerDatos("random.bin", N);
 
@@ -43,7 +44,7 @@ int main(void) {
 
         int N = 1 << exp;
 
-        printf("Probando (europa) N = %d\n", N);
+        printf("Probando nearx (europa) N = %d\n", N);
 
         hijo *puntos = leerDatos("europa.bin", N);
 
@@ -61,5 +62,59 @@ int main(void) {
 
         free(puntos);
     }
+
+
+
+
+
+
+    // STR RANDOM
+    for (int exp = 15; exp <= 24; exp++) {
+
+        int N = 1 << exp;
+
+        printf("Probando STR (random) N = %d\n", N);
+
+        hijo *puntos = leerDatos("random.bin", N);
+
+        inicializarArbol();
+
+        clock_t inicio = clock();
+
+        buildSTR(puntos, N);
+
+        clock_t fin = clock();
+
+        double tiempo = (double)(fin - inicio) / CLOCKS_PER_SEC;
+
+        printf("Tiempo: %.4f segundos\n\n", tiempo);
+
+        free(puntos);
+    }
+
+    // STR EUROPA
+    for (int exp = 15; exp <= 24; exp++) {
+
+        int N = 1 << exp;
+
+        printf("Probando STR (europa) N = %d\n", N);
+
+        hijo *puntos = leerDatos("europa.bin", N);
+
+        inicializarArbol();
+
+        clock_t inicio = clock();
+
+        buildSTR(puntos, N);
+
+        clock_t fin = clock();
+
+        double tiempo = (double)(fin - inicio) / CLOCKS_PER_SEC;
+
+        printf("Tiempo: %.4f segundos\n\n", tiempo);
+
+        free(puntos);
+    }
+
 
 }
