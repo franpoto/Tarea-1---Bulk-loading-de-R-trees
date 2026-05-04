@@ -2,57 +2,59 @@
 #include "Estructuras.h"
 #include "query.h"
 #include "inits.h"
+#include <math.h>
 
 /**
- * Verifica si dos rectángulos se intersectan
+ * Verifica si dos rectángulos (MBR) se intersectan.
  *
- * @param a Primer rectángulo
- * @param b Segundo rectángulo
- * @return 1 si se intersectan, 0 si no
+ * @param a Rectángulo A
+ * @param b Rectángulo B
+ * @return 1 si intersectan, 0 si no
  *
- * Dos rectángulos NO se intersectan si:
- * - uno está completamente a la izquierda del otro
- * - uno está completamente a la derecha
- * - uno está completamente arriba
- * - uno está completamente abajo
+ * Lógica:
+ * Dos rectángulos NO se intersectan si uno está completamente:
+ * - a la izquierda
+ * - a la derecha
+ * - arriba
+ * - abajo
  */
 int interseccion(MBR a, MBR b){
-    // a esta a la izq de b
+
+    // A está completamente a la izquierda de B
     if (a.xmax < b.xmin)
         return 0;
-    // a esta a la der de b
+
+    // A está completamente a la derecha de B
     if (a.xmin > b.xmax)
         return 0;
-    // a esta abajo de b
+
+    // A está completamente abajo de B
     if (a.ymax < b.ymin)
         return 0;
-    // a esta arriba de b
+
+    // A está completamente arriba de B
     if (a.ymin > b.ymax)
-        return 0; 
-    
+        return 0;
 
     return 1;
 }
 
 /**
- * Realiza una búsqueda por rango en un R-tree almacenado en disco
+ * Realiza una búsqueda por rango sobre un R-tree almacenado en disco.
  *
- * @param f Archivo binario que contiene el árbol
- * @param nodeIndex Índice del nodo actual dentro del archivo
+ * @param f Archivo binario del árbol
+ * @param nodeIndex Índice del nodo actual en el archivo
  * @param query Rectángulo de consulta
- * @param io_count Contador de accesos a disco
+ * @param io_count Contador de accesos a disco (IO)
+ * @return cantidad de puntos encontrados
  *
- * @details
- * El algoritmo funciona de manera recursiva:
- * 1. Lee el nodo desde el archivo
- * 2. Recorre sus hijos
- * 3. Para cada hijo:
- *    - Si su MBR NO intersecta con la consulta → se ignora
- *    - Si intersecta:
- *        - Si es hoja (valor == -1) → se reporta el punto
- *        - Si es nodo interno → se llama recursivamente
+ * Funcionamiento:
+ * - Lee el nodo desde disco
+ * - Recorre sus hijos
+ * - Si no intersecta → se descarta
+ * - Si es hoja → cuenta punto
+ * - Si es interno → recursión
  */
-
 int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count) {
 
     Nodo nodo;
@@ -62,20 +64,20 @@ int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count) {
     fseek(f, nodeIndex * sizeof(Nodo), SEEK_SET);
     fread(&nodo, sizeof(Nodo), 1, f);
 
-    (*io_count)++;
+    (*io_count)++; // cada lectura de nodo cuenta como IO
 
     for (int i = 0; i < nodo.k; i++) {
 
         hijo h = nodo.hijos[i];
 
-        
+        // poda: si no intersecta, se ignora
         if (!interseccion(h.clave, query)) continue;
 
-        
+        // hoja
         if (h.valor == -1) {
             encontrados++;
         }
-        
+        // nodo interno
         else {
             encontrados += rangeQuery(f, h.valor, query, io_count);
         }
@@ -84,13 +86,19 @@ int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count) {
     return encontrados;
 }
 
+/**
+ * Genera un cuadrado aleatorio dentro del espacio [0,1]².
+ *
+ * @param s lado del cuadrado
+ * @return MBR con la query generada
+ */
 MBR generarQuery(float s) {
     MBR q;
 
     float x = (float)rand() / RAND_MAX;
     float y = (float)rand() / RAND_MAX;
 
-
+    // asegurar que el cuadrado no salga del rango [0,1]
     if (x > 1.0 - s) x = 1.0 - s;
     if (y > 1.0 - s) y = 1.0 - s;
 
@@ -102,11 +110,22 @@ MBR generarQuery(float s) {
     return q;
 }
 
+/**
+ * Calcula la desviación estándar de un conjunto de datos.
+ *
+ * @param arr arreglo de valores
+ * @param n tamaño del arreglo
+ * @param mean media de los datos
+ * @return desviación estándar
+ */
 double stddev(double arr[], int n, double mean) {
+
     double sum = 0.0;
+
     for (int i = 0; i < n; i++) {
         double d = arr[i] - mean;
         sum += d * d;
     }
+
     return sqrt(sum / n);
 }
