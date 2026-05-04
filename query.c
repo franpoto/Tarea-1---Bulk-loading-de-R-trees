@@ -57,28 +57,37 @@ int interseccion(MBR a, MBR b){
  */
 int rangeQuery(FILE* f, int nodeIndex, MBR query, int* io_count) {
 
+    if (nodeIndex < 0) {
+        printf("Indice invalido: %d\n", nodeIndex);
+        return 0;
+    }
+
     Nodo nodo;
     int encontrados = 0;
 
-    // leer nodo desde disco
     fseek(f, nodeIndex * sizeof(Nodo), SEEK_SET);
-    fread(&nodo, sizeof(Nodo), 1, f);
 
-    (*io_count)++; // cada lectura de nodo cuenta como IO
+    if (fread(&nodo, sizeof(Nodo), 1, f) != 1) {
+        printf("Error leyendo nodo en índice %d\n", nodeIndex);
+        return 0;
+    }
+
+    (*io_count)++;
+
+    if (nodo.k < 0 || nodo.k > 204) {
+        printf("Nodo corrupto en índice %d (k=%d)\n", nodeIndex, nodo.k);
+        return 0;
+    }
 
     for (int i = 0; i < nodo.k; i++) {
 
         hijo h = nodo.hijos[i];
 
-        // poda: si no intersecta, se ignora
         if (!interseccion(h.clave, query)) continue;
 
-        // hoja
         if (h.valor == -1) {
             encontrados++;
-        }
-        // nodo interno
-        else {
+        } else if (h.valor >= 0) {
             encontrados += rangeQuery(f, h.valor, query, io_count);
         }
     }
