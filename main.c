@@ -179,7 +179,14 @@ int main(void) {
 
         clock_t inicio = clock();
 
-        buildSTR(puntos, N);
+        int root = buildSTR(puntos, N);
+        printf("Total nodos: %d\n", total_nodos);
+        printf("Root k: %d\n", arbol[0].k);
+        if (root != 0) {
+            Nodo temp = arbol[0];
+            arbol[0] = arbol[root];
+            arbol[root] = temp;
+        }
 
         clock_t fin = clock();
 
@@ -187,7 +194,6 @@ int main(void) {
 
         printf("Tiempo: %.4f segundos\n\n", tiempo);
 
-        int root = buildSTR(puntos, N);
         guardarArbol("str.bin");
 
 
@@ -206,7 +212,7 @@ int main(void) {
                 MBR query = generarQuery(s);
                 int io = 0;
 
-                int encontrados = rangeQuery(f, root, query, &io);
+                int encontrados = rangeQuery(f, 0, query, &io);
 
                 io_vals[q] = io;
                 pts_vals[q] = encontrados;
@@ -248,7 +254,12 @@ int main(void) {
 
         clock_t inicio = clock();
 
-        buildSTR(puntos, N);
+        int root = buildSTR(puntos, N);
+        if (root != 0) {
+            Nodo temp = arbol[0];
+            arbol[0] = arbol[root];
+            arbol[root] = temp;
+        }
 
         clock_t fin = clock();
 
@@ -256,7 +267,6 @@ int main(void) {
 
         printf("Tiempo: %.4f segundos\n\n", tiempo);
 
-        int root = buildSTR(puntos, N);
         guardarArbol("str.bin");
 
         FILE *f = fopen("str.bin", "rb");
@@ -274,7 +284,7 @@ int main(void) {
                 MBR query = generarQuery(s);
                 int io = 0;
 
-                int encontrados = rangeQuery(f, root, query, &io);
+                int encontrados = rangeQuery(f, 0, query, &io);
 
                 io_vals[q] = io;
                 pts_vals[q] = encontrados;

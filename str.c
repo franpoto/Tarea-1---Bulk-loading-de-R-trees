@@ -8,7 +8,6 @@
 #include "inits.h"
 #include "nearestx.h"
 #include "str.h"
-#include "tgmath.h"
 #include "math.h"
 
 
@@ -107,7 +106,6 @@ int buildSTR(hijo* elementos, int n) {
 
             for (int k = j; k < j + B && k < end; k++) {
                 node.hijos[node.k] = elementos[k];
-                node.hijos[node.k].valor = -1;
                 node.k++;
             }
 
