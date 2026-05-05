@@ -14,8 +14,6 @@ int num_queries = 100;
 float tamaños[] = {0.0025, 0.005, 0.01, 0.025, 0.05};
 
 int main(void) {
-    printf("Hello, World!\n");
-
 
     FILE *out = fopen("resultados.csv", "w");
     if (!out) {
@@ -180,8 +178,6 @@ int main(void) {
         clock_t inicio = clock();
 
         int root = buildSTR(puntos, N);
-        printf("Total nodos: %d\n", total_nodos);
-        printf("Root k: %d\n", arbol[0].k);
         if (root != 0) {
             Nodo temp = arbol[0];
             arbol[0] = arbol[root];
