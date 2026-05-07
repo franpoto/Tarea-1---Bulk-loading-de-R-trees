@@ -4,10 +4,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Estructuras.h"
-#include "inits.h"
-#include "nearestx.h"
-#include "str.h"
+#include "../include/Estructuras.h"
+#include "../include/inits.h"
+#include "../include/nearestx.h"
+#include "../include/str.h"
 #include "math.h"
 
 

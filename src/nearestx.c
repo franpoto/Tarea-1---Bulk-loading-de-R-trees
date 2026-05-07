@@ -5,15 +5,32 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Estructuras.h"
-#include "inits.h"
+#include "../include/Estructuras.h"
+#include "../include/inits.h"
 
-//calcula los centros en X
+
+
+/**
+ * calcula el centro x de un rectangulo
+ *
+ * r: mbr del rectangulo
+ *
+ * return:
+ * coordenada x del centro
+ */
 float centroX(MBR r) {
     return (r.xmin + r.xmax) / 2.0;
 }
 
-// devuelve -1 0 1 dependiendo de la comparacion entre a y b
+/**
+ * compara dos hijos segun su centro x
+ *
+ * a: primer hijo
+ * b: segundo hijo
+ *
+ * return:
+ * -1, 0 o 1
+ */
 int cmpX(const void *a, const void *b) {
     hijo *h1 = (hijo*)a;
     hijo *h2 = (hijo*)b;
@@ -26,8 +43,14 @@ int cmpX(const void *a, const void *b) {
     return 0;
 }
 
-//calcula MRB de un nodo
-
+/**
+ * calcula el mbr de un nodo
+ *
+ * n: nodo de entrada
+ *
+ * return:
+ * mbr resultante
+ */
 MBR calcularMBR(Nodo *n) {
     MBR r = n->hijos[0].clave;
 
@@ -41,24 +64,30 @@ MBR calcularMBR(Nodo *n) {
     return r;
 }
 
-// funcion completa
-
+/**
+ * construye un r-tree usando nearest-x
+ *
+ * entrada: arreglo de hijos
+ * n: cantidad de elementos
+ *
+ * return:
+ * 0 si termina correctamente
+ */
 int nearestX(hijo *entrada, int n) {
 
     while (1) {
 
-        //  ordenar por X
+        // ordenar por x
         qsort(entrada, n, sizeof(hijo), cmpX);
 
         int inicio_nivel = total_nodos;
         int nodos_creados = 0;
 
-        //  agrupar en nodos
+        // agrupar en nodos
         for (int i = 0; i < n; i += B) {
 
             Nodo nodo;
             nodo.k = 0;
-
 
             int limite = (i + B < n) ? i + B : n;
 
@@ -70,23 +99,22 @@ int nearestX(hijo *entrada, int n) {
             nodos_creados++;
         }
 
-        //  si cabe en un nodo -> raíz
+        // crear raiz
         if (nodos_creados <= B) {
 
             Nodo raiz;
             raiz.k = nodos_creados;
-
 
             for (int i = 0; i < nodos_creados; i++) {
                 raiz.hijos[i].clave = calcularMBR(&arbol[inicio_nivel + i]);
                 raiz.hijos[i].valor = inicio_nivel + i;
             }
 
-            arbol[0] = raiz; // raíz en posición 0
+            arbol[0] = raiz;
             return 0;
         }
 
-        //   generar siguiente nivel
+        // siguiente nivel
         hijo *nuevo = (hijo*) malloc(sizeof(hijo) * nodos_creados);
 
         for (int i = 0; i < nodos_creados; i++) {
@@ -94,7 +122,6 @@ int nearestX(hijo *entrada, int n) {
             nuevo[i].valor = inicio_nivel + i;
         }
 
-        // preparar siguiente iteración
         entrada = nuevo;
         n = nodos_creados;
     }

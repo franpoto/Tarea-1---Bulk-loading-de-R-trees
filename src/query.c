@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "Estructuras.h"
-#include "query.h"
-#include "inits.h"
+#include "../include/Estructuras.h"
+#include "../include/query.h"
+#include "../include/inits.h"
 #include <math.h>
 
 /**

@@ -4,9 +4,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Estructuras.h"
-#include "inits.h"
+#include "../include/Estructuras.h"
+#include "../include/inits.h"
 
+
+
+/**
+ * lee puntos desde un archivo binario
+ *
+ * filename: nombre del archivo
+ * N: cantidad de puntos a leer
+ *
+ * return:
+ * arreglo de hijos
+ */
 hijo* leerDatos(const char* filename, int N) {
     FILE *f = fopen(filename, "rb");
 

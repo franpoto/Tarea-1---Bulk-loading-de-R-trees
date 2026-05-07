@@ -3,12 +3,12 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include "Estructuras.h"
-#include "leerArchivos.h"
-#include "inits.h"
-#include "nearestx.h"
-#include "query.h"
-#include "str.h"
+#include "../include/Estructuras.h"
+#include "../include/leerArchivos.h"
+#include "../include/inits.h"
+#include "../include/nearestx.h"
+#include "../include/query.h"
+#include "../include/str.h"
 
 int num_queries = 100;
 float tamaños[] = {0.0025, 0.005, 0.01, 0.025, 0.05};
@@ -28,9 +28,9 @@ int main(void) {
 
         int N = 1 << exp;
 
-        printf("Probando (random) N = %d\n", N);
+        printf("Probando NEARESTX (random) N = %d\n", N);
 
-        hijo *puntos = leerDatos("random.bin", N);
+        hijo *puntos = leerDatos("../archivosBIN/random.bin", N);
 
         inicializarArbol();
 
@@ -101,9 +101,9 @@ int main(void) {
 
         int N = 1 << exp;
 
-        printf("Probando (europa) N = %d\n", N);
+        printf("Probando NEARESTX (europa) N = %d\n", N);
 
-        hijo *puntos = leerDatos("europa.bin", N);
+        hijo *puntos = leerDatos("../archivosBIN/europa.bin", N);
 
         inicializarArbol();
 
@@ -171,7 +171,7 @@ int main(void) {
 
         printf("Probando STR (random) N = %d\n", N);
 
-        hijo *puntos = leerDatos("random.bin", N);
+        hijo *puntos = leerDatos("../archivosBIN/random.bin", N);
 
         inicializarArbol();
 
@@ -244,7 +244,7 @@ int main(void) {
 
         printf("Probando STR (europa) N = %d\n", N);
 
-        hijo *puntos = leerDatos("europa.bin", N);
+        hijo *puntos = leerDatos("../archivosBIN/europa.bin", N);
 
         inicializarArbol();
 
